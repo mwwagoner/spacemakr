@@ -59,12 +59,23 @@ class ManufactureRuns(db.Model):
 
     productID = db.Column(
         db.Integer,
-        db.ForeignKey('products.productID')
+        db.ForeignKey('products.productID'),
         nullable=False
     )
 
     orders = db.relationship(
         'Orders',
         backref = 'manufactureRuns',
+        lazy=True
+    )
+
+class Location(db.Model):
+    system = db.Column(db.Text(100), nullable=False)
+    station = db.Column(db.Text(100), nullable=False)
+    quantity = db.Column(db.Integer)
+
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey('manufactureRuns.runID'),
         lazy=True
     )
