@@ -22,9 +22,28 @@ class Products(db.Model):
     productID = db.Column(db.Integer, primary_key=True)
     productName = db.Column(db.Text, nullable=False)
 
+    orders = db.relationship(
+        'Orders',
+        backref = 'products',
+        lazy=True
+    )
+
 class Orders(db.Model):
     orderID = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer)
     pricePerUnit = db.Column(db.Float)
-    test = db.Column
+    brokerFee = db.Column(db.Float)
+    status = db.Column(db.Text(8))
+
+    productID = db.Column(
+        db.Integer,
+        db.ForeignKey('products.productID'),
+        nullable = False
+    )
+    
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey(),
+        nullable = False
+    )
