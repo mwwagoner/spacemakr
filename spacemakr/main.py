@@ -7,12 +7,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///spacemakr.db"
 db = SQLAlchemy()
 db.init_app(app)
 
-# with app.app_context():
-#     db.create_all()
-
-@app.before_first_request
-def initialize_database():
+with app.app_context():
     db.create_all()
+
+# @app.before_first_request
+# def initialize_database():
+#     db.create_all()
 
 @app.route('/')
 def hello():
@@ -26,26 +26,6 @@ class Products(db.Model):
         'Orders',
         backref = 'products',
         lazy=True
-    )
-
-class Orders(db.Model):
-    orderID = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date)
-    quantity = db.Column(db.Integer)
-    pricePerUnit = db.Column(db.Float)
-    brokerFee = db.Column(db.Float)
-    status = db.Column(db.Text(8))
-
-    productID = db.Column(
-        db.Integer,
-        db.ForeignKey('products.productID'),
-        nullable = False
-    )
-    
-    runID = db.Column(
-        db.Integer,
-        db.ForeignKey('manufactureRuns.runID'),
-        nullable = False
     )
 
 class ManufactureRuns(db.Model):
@@ -69,25 +49,45 @@ class ManufactureRuns(db.Model):
         lazy=True
     )
 
+class Orders(db.Model):
+    orderID = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date)
+    quantity = db.Column(db.Integer)
+    pricePerUnit = db.Column(db.Float)
+    brokerFee = db.Column(db.Float)
+    status = db.Column(db.Text(8))
+
+    productID = db.Column(
+        db.Integer,
+        db.ForeignKey('products.productID'),
+        nullable = False
+    )
+    
+    # runID = db.Column(
+    #     db.Integer,
+    #     db.ForeignKey('manufactureRuns.runID'),
+    #     nullable = False
+    # )
+
 class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     system = db.Column(db.Text(100), nullable=False)
     station = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer)
 
-    runID = db.Column(
-        db.Integer,
-        db.ForeignKey('manufactureRuns.runID'),
-        nullable=False
-    )
+    # runID = db.Column(
+    #     db.Integer,
+    #     db.ForeignKey('manufactureRuns.runID'),
+    #     nullable=False
+    # )
 
 class Materials(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     material = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
-    runID = db.Column(
-        db.Integer,
-        db.ForeignKey('manufactureRuns.runID'),
-        nullable=False
-    )
+    # runID = db.Column(
+    #     db.Integer,
+    #     db.ForeignKey('manufactureRuns.runID'),
+    #     nullable=False
+    # )
