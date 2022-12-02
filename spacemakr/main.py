@@ -47,3 +47,24 @@ class Orders(db.Model):
         db.ForeignKey(),
         nullable = False
     )
+
+class ManufactureRuns(db.Model):
+    runID = db.Column(db.Integer, primary_key=True)
+    date = db._Column(db.Date)
+    quantity = db.Column(db.Integer, nullable=False)
+    materialsCost = db.Column(db.Float, nullable=False)
+    jobCost = db.Column(db.Float, nullable=False)
+    status = db.Column(db.Text(9))
+    timeToBuild = db.Column(db.Float, nullable=False)
+
+    productID = db.Column(
+        db.Integer,
+        db.ForeignKey('products.productID')
+        nullable=False
+    )
+
+    orders = db.relationship(
+        'Orders',
+        backref = 'manufactureRuns',
+        lazy=True
+    )
