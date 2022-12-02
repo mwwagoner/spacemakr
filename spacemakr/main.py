@@ -70,6 +70,7 @@ class ManufactureRuns(db.Model):
     )
 
 class Location(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     system = db.Column(db.Text(100), nullable=False)
     station = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer)
@@ -81,6 +82,7 @@ class Location(db.Model):
     )
 
 class Materials(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     material = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
