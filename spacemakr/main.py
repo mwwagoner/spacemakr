@@ -77,7 +77,7 @@ class Location(db.Model):
     runID = db.Column(
         db.Integer,
         db.ForeignKey('manufactureRuns.runID'),
-        lazy=True
+        nullable=False
     )
 
 class Materials(db.Model):
@@ -87,5 +87,5 @@ class Materials(db.Model):
     runID = db.Column(
         db.Integer,
         db.ForeignKey('manufactureRuns.runID'),
-        lazy=True
+        nullable=False
     )
