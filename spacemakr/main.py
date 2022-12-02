@@ -44,13 +44,13 @@ class Orders(db.Model):
     
     runID = db.Column(
         db.Integer,
-        db.ForeignKey(),
+        db.ForeignKey('manufactureRuns.runID'),
         nullable = False
     )
 
 class ManufactureRuns(db.Model):
     runID = db.Column(db.Integer, primary_key=True)
-    date = db._Column(db.Date)
+    date = db.Column(db.Date)
     quantity = db.Column(db.Integer, nullable=False)
     materialsCost = db.Column(db.Float, nullable=False)
     jobCost = db.Column(db.Float, nullable=False)
