@@ -7,12 +7,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///spacemakr.db"
 db = SQLAlchemy()
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
-
-# @app.before_first_request
-# def initialize_database():
+# with app.app_context():
 #     db.create_all()
+
+@app.before_first_request
+def initialize_database():
+    db.create_all()
 
 @app.route('/')
 def hello():
@@ -63,11 +63,11 @@ class Orders(db.Model):
         nullable = False
     )
     
-    # runID = db.Column(
-    #     db.Integer,
-    #     db.ForeignKey('manufactureRuns.runID'),
-    #     nullable = False
-    # )
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey('manufacture_runs.runID'),
+        nullable = False
+    )
 
 class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,19 +75,20 @@ class Location(db.Model):
     station = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer)
 
-    # runID = db.Column(
-    #     db.Integer,
-    #     db.ForeignKey('manufactureRuns.runID'),
-    #     nullable=False
-    # )
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey('manufacture_runs.runID'),
+        nullable=False
+    )
 
 class Materials(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     material = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
-    # runID = db.Column(
-    #     db.Integer,
-    #     db.ForeignKey('manufactureRuns.runID'),
-    #     nullable=False
-    # )
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey('manufacture_runs.runID'),
+        nullable=False
+    )
+
