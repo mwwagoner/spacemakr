@@ -1,14 +1,19 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
+
+import os
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///spacemakr.db"
 
 db = SQLAlchemy()
 db.init_app(app)
+
+SECRET_KEY = os.urandom(32)
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # with app.app_context():
 #     db.create_all()
@@ -20,6 +25,8 @@ def initialize_database():
 @app.route('/')
 def hello():
     return "Hello"
+
+### DB Models
 
 class Products(db.Model):
     productID = db.Column(db.Integer, primary_key=True)
@@ -95,3 +102,12 @@ class Materials(db.Model):
         nullable=False
     )
 
+### Forms
+
+class MyForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+
+@app.route('/myform')
+def myform():
+    form = MyForm()
+    return render_template('myform.html', form=form)
