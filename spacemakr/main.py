@@ -22,9 +22,73 @@ class Products(db.Model):
     productID = db.Column(db.Integer, primary_key=True)
     productName = db.Column(db.Text, nullable=False)
 
+    orders = db.relationship(
+        'Orders',
+        backref = 'products',
+        lazy=True
+    )
+
+class ManufactureRuns(db.Model):
+    runID = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date)
+    quantity = db.Column(db.Integer, nullable=False)
+    materialsCost = db.Column(db.Float, nullable=False)
+    jobCost = db.Column(db.Float, nullable=False)
+    status = db.Column(db.Text(9))
+    timeToBuild = db.Column(db.Float, nullable=False)
+
+    productID = db.Column(
+        db.Integer,
+        db.ForeignKey('products.productID'),
+        nullable=False
+    )
+
+    orders = db.relationship(
+        'Orders',
+        backref = 'manufactureRuns',
+        lazy=True
+    )
+
 class Orders(db.Model):
     orderID = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer)
     pricePerUnit = db.Column(db.Float)
-    test = db.Column
+    brokerFee = db.Column(db.Float)
+    status = db.Column(db.Text(8))
+
+    productID = db.Column(
+        db.Integer,
+        db.ForeignKey('products.productID'),
+        nullable = False
+    )
+    
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey('manufacture_runs.runID'),
+        nullable = False
+    )
+
+class Location(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    system = db.Column(db.Text(100), nullable=False)
+    station = db.Column(db.Text(100), nullable=False)
+    quantity = db.Column(db.Integer)
+
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey('manufacture_runs.runID'),
+        nullable=False
+    )
+
+class Materials(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    material = db.Column(db.Text(100), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+
+    runID = db.Column(
+        db.Integer,
+        db.ForeignKey('manufacture_runs.runID'),
+        nullable=False
+    )
+
