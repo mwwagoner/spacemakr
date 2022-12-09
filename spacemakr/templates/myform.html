@@ -4,7 +4,8 @@
 
 <form method="POST" action="">
     {{ form.csrf_token }}
-    {{form.name.label}} {{form.name}}
+    {{ form.name.label }} {{ form.name }}
+    {{ form.age.label }} {{ form.age }}
     <input type="submit" value="Go">
 </form>
 

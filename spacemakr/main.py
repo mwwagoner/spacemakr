@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField
+from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired
 
 import os
@@ -23,9 +23,9 @@ app.config['SECRET_KEY'] = SECRET_KEY
 def initialize_database():
     db.create_all()
 
-@app.route('/hello/<name>')
-def hello(name):
-    return f"Hello, {name}"
+@app.route('/hello/<name>/<age>')
+def hello(name, age):
+    return f"Hello, {name}. I see you are {age} years old."
 
 ### DB Models
 
@@ -109,6 +109,7 @@ class Materials(db.Model):
 
 class MyForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
+    age = IntegerField('age', validators=[DataRequired()])
 
 @app.route('/myform', methods=['GET', 'POST'])
 def myform():
@@ -116,9 +117,23 @@ def myform():
 
     if form.validate_on_submit():
         name = form.name.data
-        return redirect( url_for('hello', name=name) )
+        age = form.age.data
+
+        # all_the_data = [name, age]
+
+        # return redirect( url_for('hello', ata=all_the_data) )
+        return redirect( url_for('hello', name=name, age=age) )
     
 
     return render_template('myform.html', form=form)
 
+#############
+
+### Products
+
+@app.route('/products')
+def products():
+    products = Products.query.filter_by(id=1).all()
+    for product in products:
+        
 #############
