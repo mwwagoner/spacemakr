@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField
@@ -102,12 +102,21 @@ class Materials(db.Model):
         nullable=False
     )
 
+#############
+
 ### Forms
 
 class MyForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
 
-@app.route('/myform')
+@app.route('/myform', methods=['GET', 'POST'])
 def myform():
     form = MyForm()
+
+    if form.validate_on_submit():
+        return '<h1>Yay!</h1>'
+        #redirect( url_for('hello') )
+
     return render_template('myform.html', form=form)
+
+#############
