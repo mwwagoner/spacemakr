@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<form method="POST" action="/myform">
-    {{ form.crsf_token }}
-    {{form.name.label}} {{form.name(size=20)}}
+<form method="POST" action="">
+    {{ form.csrf_token }}
+    {{form.name.label}} {{form.name}}
     <input type="submit" value="Go">
 </form>
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField
@@ -12,6 +12,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///spacemakr.db"
 db = SQLAlchemy()
 db.init_app(app)
 
+# this generates a secret key that is later used by csrf protection in the web forms
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
@@ -22,9 +23,9 @@ app.config['SECRET_KEY'] = SECRET_KEY
 def initialize_database():
     db.create_all()
 
-@app.route('/')
-def hello():
-    return "Hello"
+@app.route('/hello/<name>')
+def hello(name):
+    return f"Hello, {name}"
 
 ### DB Models
 
@@ -114,8 +115,9 @@ def myform():
     form = MyForm()
 
     if form.validate_on_submit():
-        return '<h1>Yay!</h1>'
-        #redirect( url_for('hello') )
+        name = form.name.data
+        return redirect( url_for('hello', name=name) )
+    
 
     return render_template('myform.html', form=form)
 
