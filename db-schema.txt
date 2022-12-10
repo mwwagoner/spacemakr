@@ -1,0 +1,41 @@
+Products
+-
+ProductID PK
+ProductName varchar(100)
+
+
+Orders
+-
+OrderID PK
+Date date
+Quantity int
+PricePerUnit float
+ProductID FK >- Products.ProductID
+RunID FK >- ManufactureRuns.RunID
+BrokerFee float
+Status varchar(8)
+
+ManufactureRuns
+-
+RunID PK
+ProductID FK >- Products.ProductID
+Date date
+Quantity int
+MaterialsCost float
+JobCost float
+Status varchar(9)
+TimeToBuild time
+
+Location
+-
+System varchar(100)
+Station varchar(100)
+Quantity int
+RunID FK >- ManufactureRuns.RunID
+
+
+Materials
+-
+RunID FK >- ManufactureRuns.RunID
+Material varchar(100)
+Quantity

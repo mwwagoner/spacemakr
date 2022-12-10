@@ -133,7 +133,11 @@ def myform():
 
 @app.route('/products')
 def products():
-    products = Products.query.filter_by(id=1).all()
+    all_products = []
+    products = Products.query.filter_by(productID=1).all()
     for product in products:
+        all_products.append(product)
+
+    return render_template('products.html', all_products=all_products)
         
 #############
