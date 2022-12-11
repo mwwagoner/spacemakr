@@ -151,12 +151,13 @@ def products():
 
     try:
         products = Products.query.all()
-        product_text = '<ul>'
-        for product in products:
-            # all_products.append(product)
-            product_text += '<li>' + product.productName + '</li>'
-        product_text += '</ul>'
-        return product_text 
+        # product_text = '<ul>'
+        # for product in products:
+        #     # all_products.append(product)
+        #     product_text += '<li>' + product.productName + '</li>'
+        # product_text += '</ul>'
+        # return product_text 
+        return render_template('list.html', products=products)
     except Exception as e:
         # e holds a description of the error
         error_text = "<p>The error:<br>" + str(e) + "</p>"

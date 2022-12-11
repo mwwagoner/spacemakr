@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block content %}
+
 <h2>Product List</h2>
 
 <table>
@@ -8,7 +10,7 @@
     </tr>
     {% for product in products %}
     <tr>
-        <td>{{ product.ProductName }}</td>
+        <td>{{ product.productName }}</td>
     </tr>
     {% endfor %}
 </table>
