@@ -32,7 +32,7 @@ def index():
 class Products(db.Model):
     __tablename__ = 'products'
     productID = db.Column(db.Integer, primary_key=True)
-    productName = db.Column(db.Text, nullable=False)
+    productName = db.Column(db.Text, nullable=False, unique=True)
 
     orders = db.relationship(
         'Orders',
