@@ -30,6 +30,7 @@ def hello(name, age):
 ### DB Models
 
 class Products(db.Model):
+    __tablename__ = 'products'
     productID = db.Column(db.Integer, primary_key=True)
     productName = db.Column(db.Text, nullable=False)
 
@@ -44,6 +45,7 @@ class Products(db.Model):
         self.productName = productName
 
 class ManufactureRuns(db.Model):
+    __tablename__ = 'manufacture_runs'
     runID = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer, nullable=False)
@@ -65,6 +67,7 @@ class ManufactureRuns(db.Model):
     )
 
 class Orders(db.Model):
+    __tablename__ = 'orders'
     orderID = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer)
@@ -85,6 +88,7 @@ class Orders(db.Model):
     )
 
 class Location(db.Model):
+    __tablename__ = 'location'
     id = db.Column(db.Integer, primary_key=True)
     system = db.Column(db.Text(100), nullable=False)
     station = db.Column(db.Text(100), nullable=False)
@@ -97,6 +101,7 @@ class Location(db.Model):
     )
 
 class Materials(db.Model):
+    __tablename__ = 'materials'
     id = db.Column(db.Integer, primary_key=True)
     material = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
@@ -143,7 +148,7 @@ def myform():
 @app.route('/products')
 def products():
     all_products = []
-    products = Products.query.filter_by(productID=1).all()
+    products = Products.query.all()
     for product in products:
         all_products.append(product)
 
