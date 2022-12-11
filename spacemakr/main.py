@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
+from wtforms import StringField, IntegerField, SubmitField, HiddenField
 from wtforms.validators import DataRequired
 
 import os
@@ -38,6 +38,10 @@ class Products(db.Model):
         backref = 'products',
         lazy=True
     )
+
+    def __init__(self, productName):
+        
+        self.productName = productName
 
 class ManufactureRuns(db.Model):
     runID = db.Column(db.Integer, primary_key=True)
@@ -107,6 +111,11 @@ class Materials(db.Model):
 
 ### Forms
 
+class ProductsAddForm(FlaskForm):
+    product_id = HiddenField('Product id')
+    product_name = StringField('Product name', validators=[DataRequired()])
+    submit = SubmitField('Submit record')
+
 class MyForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     age = IntegerField('age', validators=[DataRequired()])
@@ -139,5 +148,21 @@ def products():
         all_products.append(product)
 
     return render_template('products.html', all_products=all_products)
+
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    form = ProductsAddForm()
+
+    if form.validate_on_submit():
+        productName = form.product_name.data
+
+        record = Products(productName)
+
+        db.session.add(record)
+        db.session.commit()
+
+        return redirect( url_for('products') )
+    
+    return render_template('productsform.html', form=form)
         
 #############
