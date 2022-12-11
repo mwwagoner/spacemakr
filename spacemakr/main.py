@@ -172,12 +172,17 @@ def add_product():
     form = ProductsAddForm()
 
     if form.validate_on_submit():
-        productName = form.product_name.data
+        try:
+            productName = form.product_name.data
 
-        record = Products(productName)
+            record = Products(productName)
 
-        db.session.add(record)
-        db.session.commit()
+            db.session.add(record)
+            db.session.commit()
+        except Exception as e:
+            error_text = "<p>The error:<br>" + str(e) + "</p>"
+            hed = '<h1>Something is borken.</h1>'
+            return hed + error_text
 
         return redirect( url_for('products') )
     
