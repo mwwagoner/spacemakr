@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+<h2>Product List</h2>
+
+<table>
+    <tr>
+        <th>Product Name</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+        <td>{{ product.ProductName }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
