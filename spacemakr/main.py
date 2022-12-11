@@ -125,21 +125,21 @@ class MyForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     age = IntegerField('age', validators=[DataRequired()])
 
-@app.route('/myform', methods=['GET', 'POST'])
-def myform():
-    form = MyForm()
+# @app.route('/myform', methods=['GET', 'POST'])
+# def myform():
+#     form = MyForm()
 
-    if form.validate_on_submit():
-        name = form.name.data
-        age = form.age.data
+#     if form.validate_on_submit():
+#         name = form.name.data
+#         age = form.age.data
 
-        # all_the_data = [name, age]
+#         # all_the_data = [name, age]
 
-        # return redirect( url_for('hello', ata=all_the_data) )
-        return redirect( url_for('hello', name=name, age=age) )
+#         # return redirect( url_for('hello', ata=all_the_data) )
+#         return redirect( url_for('hello', name=name, age=age) )
     
 
-    return render_template('myform.html', form=form)
+#     return render_template('myform.html', form=form)
 
 #############
 
@@ -148,9 +148,21 @@ def myform():
 @app.route('/products')
 def products():
     all_products = []
-    products = Products.query.all()
-    for product in products:
-        all_products.append(product)
+
+    try:
+        products = Products.query.all()
+        product_text = '<ul>'
+        for product in products:
+            # all_products.append(product)
+            product_text += '<li>' + product.productName + '</li>'
+        product_text += '</ul>'
+        return product_text 
+    except Exception as e:
+        # e holds a description of the error
+        error_text = "<p>The error:<br>" + str(e) + "</p>"
+        hed = '<h1>Something is borken.</h1>'
+        return hed + error_text
+
 
     return render_template('products.html', all_products=all_products)
 
