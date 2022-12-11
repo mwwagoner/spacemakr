@@ -23,9 +23,9 @@ app.config['SECRET_KEY'] = SECRET_KEY
 def initialize_database():
     db.create_all()
 
-@app.route('/hello/<name>/<age>')
-def hello(name, age):
-    return f"Hello, {name}. I see you are {age} years old."
+@app.route('/')
+def index():
+    return render_template('base.html')
 
 ### DB Models
 
