@@ -121,9 +121,9 @@ class ProductsAddForm(FlaskForm):
     product_name = StringField('Product name', validators=[DataRequired()])
     submit = SubmitField('Submit record')
 
-class MyForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    age = IntegerField('age', validators=[DataRequired()])
+# class MyForm(FlaskForm):
+#     name = StringField('name', validators=[DataRequired()])
+#     age = IntegerField('age', validators=[DataRequired()])
 
 # @app.route('/myform', methods=['GET', 'POST'])
 # def myform():
@@ -147,16 +147,8 @@ class MyForm(FlaskForm):
 
 @app.route('/products')
 def products():
-    all_products = []
-
     try:
         products = Products.query.all()
-        # product_text = '<ul>'
-        # for product in products:
-        #     # all_products.append(product)
-        #     product_text += '<li>' + product.productName + '</li>'
-        # product_text += '</ul>'
-        # return product_text 
         return render_template('list.html', products=products)
     except Exception as e:
         # e holds a description of the error
@@ -188,4 +180,8 @@ def add_product():
     
     return render_template('productsform.html', form=form)
         
+#############
+
+### Locations
+
 #############
