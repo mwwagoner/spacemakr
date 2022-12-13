@@ -156,9 +156,6 @@ def products():
         hed = '<h1>Something is borken.</h1>'
         return hed + error_text
 
-
-    return render_template('products.html', all_products=all_products)
-
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
     form = ProductsAddForm()
