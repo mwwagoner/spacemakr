@@ -1,11 +1,20 @@
-from flask import Flask
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField, SubmitField, HiddenField
+from wtforms.validators import DataRequired
+
+import os
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///spacemakr.db"
 
 db = SQLAlchemy()
 db.init_app(app)
+
+# this generates a secret key that is later used by csrf protection in the web forms
+SECRET_KEY = os.urandom(32)
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # with app.app_context():
 #     db.create_all()
@@ -15,12 +24,15 @@ def initialize_database():
     db.create_all()
 
 @app.route('/')
-def hello():
-    return "Hello"
+def index():
+    return render_template('base.html')
+
+### DB Models
 
 class Products(db.Model):
+    __tablename__ = 'products'
     productID = db.Column(db.Integer, primary_key=True)
-    productName = db.Column(db.Text, nullable=False)
+    productName = db.Column(db.Text, nullable=False, unique=True)
 
     orders = db.relationship(
         'Orders',
@@ -28,7 +40,12 @@ class Products(db.Model):
         lazy=True
     )
 
+    def __init__(self, productName):
+        
+        self.productName = productName
+
 class ManufactureRuns(db.Model):
+    __tablename__ = 'manufacture_runs'
     runID = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer, nullable=False)
@@ -50,6 +67,7 @@ class ManufactureRuns(db.Model):
     )
 
 class Orders(db.Model):
+    __tablename__ = 'orders'
     orderID = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date)
     quantity = db.Column(db.Integer)
@@ -70,6 +88,7 @@ class Orders(db.Model):
     )
 
 class Location(db.Model):
+    __tablename__ = 'location'
     id = db.Column(db.Integer, primary_key=True)
     system = db.Column(db.Text(100), nullable=False)
     station = db.Column(db.Text(100), nullable=False)
@@ -82,6 +101,7 @@ class Location(db.Model):
     )
 
 class Materials(db.Model):
+    __tablename__ = 'materials'
     id = db.Column(db.Integer, primary_key=True)
     material = db.Column(db.Text(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
@@ -92,3 +112,73 @@ class Materials(db.Model):
         nullable=False
     )
 
+#############
+
+### Forms
+
+class ProductsAddForm(FlaskForm):
+    product_id = HiddenField('Product id')
+    product_name = StringField('Product name', validators=[DataRequired()])
+    submit = SubmitField('Submit record')
+
+# class MyForm(FlaskForm):
+#     name = StringField('name', validators=[DataRequired()])
+#     age = IntegerField('age', validators=[DataRequired()])
+
+# @app.route('/myform', methods=['GET', 'POST'])
+# def myform():
+#     form = MyForm()
+
+#     if form.validate_on_submit():
+#         name = form.name.data
+#         age = form.age.data
+
+#         # all_the_data = [name, age]
+
+#         # return redirect( url_for('hello', ata=all_the_data) )
+#         return redirect( url_for('hello', name=name, age=age) )
+    
+
+#     return render_template('myform.html', form=form)
+
+#############
+
+### Products
+
+@app.route('/products')
+def products():
+    try:
+        products = Products.query.all()
+        return render_template('list.html', products=products)
+    except Exception as e:
+        # e holds a description of the error
+        error_text = "<p>The error:<br>" + str(e) + "</p>"
+        hed = '<h1>Something is borken.</h1>'
+        return hed + error_text
+
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    form = ProductsAddForm()
+
+    if form.validate_on_submit():
+        try:
+            productName = form.product_name.data
+
+            record = Products(productName)
+
+            db.session.add(record)
+            db.session.commit()
+        except Exception as e:
+            error_text = "<p>The error:<br>" + str(e) + "</p>"
+            hed = '<h1>Something is borken.</h1>'
+            return hed + error_text
+
+        return redirect( url_for('products') )
+    
+    return render_template('productsform.html', form=form)
+        
+#############
+
+### Locations
+
+#############
