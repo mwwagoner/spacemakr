@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, HiddenField
 from wtforms.validators import DataRequired
@@ -9,8 +10,29 @@ import os
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///spacemakr.db"
 
+# This tells the flask_session extension that we want to use a sqlalchemy db for session data
+app.config["SESSION_TYPE"] = "sqlalchemy"
+# app.config["SESSION_FILE_DIR"] = "spacemakr/instance"
+
 db = SQLAlchemy()
 db.init_app(app)
+
+# Tell flask_session which SQLAlchemy instance to use
+app.config["SESSION_SQLALCHEMY"] = db
+
+""" 
+Name of the table in the above DB that will hold the session data 
+This table must be configured as:
+id - INTEGER PK
+session_id - TEXT
+data - BLOB
+expiry - INTEGER
+"""
+app.config["SESSION_SQLALCHEMY_TABLE"] = "session_data"
+
+# Create the session object and initialize the app with it
+sess = Session()
+sess.init_app(app)
 
 # this generates a secret key that is later used by csrf protection in the web forms
 SECRET_KEY = os.urandom(32)
@@ -181,4 +203,18 @@ def add_product():
 
 ### Locations
 
+@app.route('/locations')
+def locations():
+    locations = Location.query.all()
+    return
+
 #############
+
+@app.route('/set')
+def set():
+    session['key'] = 'Kiss this'
+    return 'ok'
+
+@app.route('/get')
+def get():
+    return session.get('key', 'not set')
