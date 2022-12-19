@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Location of products</h2>
+
+<table>
+    <tr>
+        <th>Manufacture ID</th>
+        <th>System</th>
+        <th>Station</th>
+        <th>Quantity</th>
+    </tr>
+    {% for location in locations %}
+    <tr>
+        <td>{{ location.runID }}</td>
+        <td>{{ location.system }}</td>
+        <td>{{ location.station }}</td>
+        <td>{{ location.quantity }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

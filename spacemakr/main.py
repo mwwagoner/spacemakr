@@ -112,7 +112,7 @@ class Orders(db.Model):
         db.ForeignKey('manufacture_runs.runID'),
         nullable = False
     )
-
+    
 class Location(db.Model):
     __tablename__ = 'location'
     id = db.Column(db.Integer, primary_key=True)
@@ -210,8 +210,14 @@ def add_product():
 
 @app.route('/locations')
 def locations():
-    locations = Location.query.all()
-    return locations
+    try:
+        locations = Location.query.all()
+        return render_template('listlocations.html', locations=locations)
+    except Exception as e:
+        # e holds a description of the error
+        error_text = "<p>The error:<br>" + str(e) + "</p>"
+        hed = '<h1>Something is borken.</h1>'
+        return hed + error_text
 
 #############
 
