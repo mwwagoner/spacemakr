@@ -225,10 +225,18 @@ def add_manufacture():
         try:
             date = form.date.data
             productID = form.product_id.data
+            quantity = form.quantity.data
+            materialsCost = form.materials_cost.data
+            jobCost = form.job_cost.data
+            timeToBuild = form.time_to_build.data
+
+            return "Added"
         except Exception as e:
             error_text = "<p>The error:<br>" + str(e) + "</p>"
             hed = '<h1>Something is borken.</h1>'
             return hed + error_text
+    
+    return render_template('manufactureform.html', form=form)
 
 #############
 

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST" action="">
+    {{ form.csrf_token }}
+    {{ form.date.label }}
+    {{ form.date }}
+    {{ form.product_id.label }}
+    {{ form.product_id }}
+    {{ form.quantity.label }}
+    {{ form.quantity }}
+    {{ form.materials_cost.label }}
+    {{ form.materials_cost }}
+    {{ form.job_cost.label }}
+    {{ form.job_cost }}
+    {{ form.time_to_build.label }}
+    {{ form.time_to_build }}
+    <input type="submit" value="Add product">
+</form>
+
+{% endblock %}
