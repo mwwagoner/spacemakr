@@ -92,6 +92,14 @@ class ManufactureRuns(db.Model):
         lazy=True
     )
 
+    def __init__(self, date, quantity, materialsCost, jobCost, timeToBuild, productID):
+        self.date = date
+        self.quantity = quantity
+        self.materialsCost = materialsCost
+        self.jobCost = jobCost
+        self.timeToBuild = timeToBuild
+        self.productID = productID
+
 class Orders(db.Model):
     __tablename__ = 'orders'
     orderID = db.Column(db.Integer, primary_key=True)
@@ -229,6 +237,11 @@ def add_manufacture():
             materialsCost = form.materials_cost.data
             jobCost = form.job_cost.data
             timeToBuild = form.time_to_build.data
+
+            new_record = ManufactureRuns(date, quantity, materialsCost,jobCost,timeToBuild,productID)
+
+            db.session.add(new_record)
+            db.session.commit()
 
             return "Added"
         except Exception as e:
