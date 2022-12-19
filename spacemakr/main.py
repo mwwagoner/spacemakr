@@ -8,17 +8,25 @@ from wtforms.validators import DataRequired
 import os
 
 app = Flask(__name__)
+
+# Give the app the URI for the sqlite database
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///spacemakr.db"
 
-# This tells the flask_session extension that we want to use a sqlalchemy db for session data
-app.config["SESSION_TYPE"] = "sqlalchemy"
-# app.config["SESSION_FILE_DIR"] = "spacemakr/instance"
+# Generate a secret key that is later used by csrf protection in the web forms as well as the session
+SECRET_KEY = os.urandom(32)
+app.config['SECRET_KEY'] = SECRET_KEY
+
+# Tell flask_session to use the file system for session data
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_FILE_DIR"] = "spacemakr/instance"
+
+app.config["SESSION_PERMANENT"] = False
 
 db = SQLAlchemy()
 db.init_app(app)
 
 # Tell flask_session which SQLAlchemy instance to use
-app.config["SESSION_SQLALCHEMY"] = db
+# app.config["SESSION_SQLALCHEMY"] = db
 
 """ 
 Name of the table in the above DB that will hold the session data 
@@ -28,15 +36,11 @@ session_id - TEXT
 data - BLOB
 expiry - INTEGER
 """
-app.config["SESSION_SQLALCHEMY_TABLE"] = "session_data"
+# app.config["SESSION_SQLALCHEMY_TABLE"] = "session_data"
 
 # Create the session object and initialize the app with it
 sess = Session()
 sess.init_app(app)
-
-# this generates a secret key that is later used by csrf protection in the web forms
-SECRET_KEY = os.urandom(32)
-app.config['SECRET_KEY'] = SECRET_KEY
 
 # with app.app_context():
 #     db.create_all()
@@ -134,6 +138,7 @@ class Materials(db.Model):
         nullable=False
     )
 
+
 #############
 
 ### Forms
@@ -206,7 +211,7 @@ def add_product():
 @app.route('/locations')
 def locations():
     locations = Location.query.all()
-    return
+    return locations
 
 #############
 
@@ -217,4 +222,4 @@ def set():
 
 @app.route('/get')
 def get():
-    return session.get('key', 'not set')
+    return session.pop('key', 'not set')
