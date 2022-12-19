@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, HiddenField
+from wtforms import StringField, IntegerField, SubmitField, HiddenField, DateField, FloatField
 from wtforms.validators import DataRequired
 
 import os
@@ -148,6 +148,15 @@ class ProductsAddForm(FlaskForm):
     product_name = StringField('Product name', validators=[DataRequired()])
     submit = SubmitField('Submit record')
 
+class ManufactureAddForm(FlaskForm):
+    run_id = HiddenField('Run id')
+    date = DateField('Date')
+    product_id = IntegerField('Product id', validators=[DataRequired()])
+    quantity = IntegerField('Quantity', validators=[DataRequired()])
+    materials_cost = FloatField('Materials cost', validators=[DataRequired()])
+    job_cost = FloatField('Job cost', validators=[DataRequired()])
+    time_to_build = FloatField('Time to build')
+
 # class MyForm(FlaskForm):
 #     name = StringField('name', validators=[DataRequired()])
 #     age = IntegerField('age', validators=[DataRequired()])
@@ -206,6 +215,23 @@ def add_product():
         
 #############
 
+### Manufacture Runs
+
+@app.route('/add_manufacture', methods=['GET', 'POST'])
+def add_manufacture():
+    form = ManufactureAddForm()
+
+    if form.validate_on_submit():
+        try:
+            date = form.date.data
+            productID = form.product_id.data
+        except Exception as e:
+            error_text = "<p>The error:<br>" + str(e) + "</p>"
+            hed = '<h1>Something is borken.</h1>'
+            return hed + error_text
+
+#############
+
 ### Locations
 
 @app.route('/locations')
@@ -221,11 +247,12 @@ def locations():
 
 #############
 
-@app.route('/set')
-def set():
-    session['key'] = 'Kiss this'
-    return 'ok'
+# Test code to pass session variables between routes
+# @app.route('/set')
+# def set():
+#     session['key'] = 'Kiss this'
+#     return 'ok'
 
-@app.route('/get')
-def get():
-    return session.pop('key', 'not set')
+# @app.route('/get')
+# def get():
+#     return session.pop('key', 'not set')
